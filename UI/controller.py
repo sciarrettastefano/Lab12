@@ -48,4 +48,31 @@ class Controller:
 
 
     def handle_path(self, e):
-        pass
+        txtN = self._view.txtN.value
+        if txtN == "":
+            self._view.txtOut3.controls.clear()
+            self._view.txtOut3.controls.append(ft.Text(f"Inserire il numero di archi desiderato.",
+                                                          color="red"))
+            self._view.update_page()
+            return
+        try:
+            N = int(txtN)
+        except ValueError:
+            self._view.txtOut3.controls.clear()
+            self._view.txtOut3.controls.append(ft.Text(f"Il numero di archi deve essere un intero.",
+                                                          color="red"))
+            self._view.update_page()
+            return
+        if N < 2:
+            self._view.txtOut3.controls.clear()
+            self._view.txtOut3.controls.append(ft.Text(f"Il numero di archi deve essere almeno uguale a 2.",
+                                                       color="red"))
+            self._view.update_page()
+            return
+
+        bestPath, bestScore = self._model.getBestPath(N)
+        self._view.txtOut3.controls.clear()
+        self._view.txtOut3.controls.append(ft.Text(f"Peso cammino massimo: {bestScore}"))
+        for i in range(N):
+            self._view.txtOut3.controls.append(ft.Text(f"{bestPath[i]} --> {bestPath[i+1]}: {self._model._graph[bestPath[i]][bestPath[i+1]]["weight"]}"))
+        self._view.update_page()
